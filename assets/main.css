@@ -112,3 +112,11 @@ body {
     margin-top: 5px;
 
 }
+.credit-iframe {
+    width: 200px;
+    height: 35px;
+    direction: rtl;
+}
+iframe .bp-core-amount,.bp-core-currency {
+    font-family: Tahoma;
+}

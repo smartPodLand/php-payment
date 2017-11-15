@@ -1,23 +1,18 @@
 <?php
 include 'config.php';
+include 'utilities.php';
 include 'layout/header.php';
 if(isset($_SESSION['access_token'])){
-    $url = $config['service'].'user';
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization:Bearer {$_SESSION['access_token']}"]);
-    $response = curl_exec($ch);
-    curl_close($ch);
-    $result = json_decode($response);
+   $user = getUser();
 ?>
 <ul>
     <li>
 <b>        نام کابری:</b>
-        <?=$_SESSION['username']?>
+        <?=$user->username?>
     </li>
     <li>
         <b>        همراه:</b>
-        <?=$_SESSION['phone_number']?>
+        <?=$user->cellphoneNumber?>
     </li>
 </ul>
     <a class="btn btn-success" href="<?=$config['home']?>index.php">بازگشت</a>

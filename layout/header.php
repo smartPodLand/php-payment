@@ -12,14 +12,13 @@ require "config.php";
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Fanap Peyk</title>
+    <title>سامانه خرید</title>
 
     <!-- Bootstrap core CSS -->
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
     <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
 
     <!-- Custom styles for this template -->
@@ -42,14 +41,14 @@ require "config.php";
                     ?>
                     <li><a href="logout.php">خروج</a></li>
                     <li><a href="user_info.php">اطلاعات کاربر</a></li>
-                    <li><a href="req.php">درخواست پیک</a></li>
+                    <li><a href="price.php">خرید</a></li>
                     <?php
                 }
                 else {
                     ?>
                     <li><a href="login.php">ورود</a></li>
                     <li><a href="register.php">عضویت</a></li>
-                    <li><a href="req.php">درخواست پیک</a></li>
+                    <li><a href="price.php">خرید</a></li>
                     <?php
                 }
                 ?>
@@ -61,7 +60,7 @@ require "config.php";
         $isLoggedIn = false;
         if(isset($_SESSION['start_time'])) {
             $isLoggedIn = true;
-            if ((time() - $_SESSION['start_time'])>$_SESSION['expires_in']) {
+            if ((time() - $_SESSION['start_time']) > $_SESSION['expires_in']) {
                 //refreshing token:
                 $url = $config['sso'] . 'token/';
                 $ch = curl_init($url);
@@ -79,44 +78,13 @@ require "config.php";
                 $_SESSION['start_time'] = time();
             }
 
-
-            $curl = curl_init();
-            curl_setopt_array($curl, [
-                CURLOPT_URL => $config['service'] . "nzh/getCredit",
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 30,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'GET',
-                CURLOPT_SSL_VERIFYHOST=>0,
-                CURLOPT_SSL_VERIFYPEER=> 0,
-                CURLOPT_HTTPHEADER => [
-                    "_token_: {$_SESSION['access_token']}",
-                    "_token_issuer_: 1"
-                ],
-            ]);
-            $response_header = curl_exec($curl);
-            $err = curl_error($curl);
-
-            curl_close($curl);
-            if ($err) {
-                $response_header = false;
-            } else {
-                $response_header = json_decode($response_header);
-                if(!$response_header->result){
-                    $response_header->result[0]= new StdClass;
-                    $response_header->result[0]->currencySrv= new StdClass;
-                    $response_header->result[0]->amount = 0;
-                    $response_header->result[0]->currencySrv->name = "ریال";
-                }
-
-            }
         }
+
         ?>
         <div class="pull-right">
-        <h3 class="text-muted">فناپ پیک</h3>
+        <h3 class="text-muted"><a href="<?=$config['home']?>">سامانه خرید</a></h3>
             <?php if ($isLoggedIn) { ?>
-            <div><b>اعتبار شما:</b><?=$response_header->result[0]->amount?><?=$response_header->result[0]->currencySrv->name?></div>
+                <b>اعتبار شما: </b><iframe id="credit-iframe" class="credit-iframe" src="<?=$config['private_call_address']?>pbc/getcredit" frameborder="0" scrolling="no"></iframe>
             <?php } ?>
         </div>
     </div>
