@@ -9,6 +9,24 @@ if(!isset($_SESSION['access_token'])){
 else {
     $invoice_id_enter = $_SESSION['invoice_id'];
     $api_token = $config['api_token'];
+
+    //verify verificationNeeded=true invoice
+    $url = $config['service'].'nzh/biz/verifyInvoice';
+    $ch = curl_init($url);
+    $fields = "id=".$invoice_id_enter;
+
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                '_token_: '.$config['api_token'],
+                '_token_issuer_: 1',
+            ]);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    $response_verify = curl_exec($ch);
+
+    //verify invoice is paid
     $url = "http://sandbox.fanapium.com:8080/nzh/biz/getInvoiceList/?size=1&id={$_GET['fanapBillNumber']}&firstId=0";
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -25,6 +43,7 @@ else {
     $is_canceled = $resp->result[0]->canceled;
     $invoice_id = $_GET['fanapBillNumber'];
     $responseInvoice = $resp;
+
     if ($err) {
         echo 'cURL Error #:' . $err;
     } else {

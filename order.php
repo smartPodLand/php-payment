@@ -14,7 +14,7 @@ else {
     $ott = getOtt();
     curl_setopt_array($curl, [
             //Attention: set pay parameter to true for decresing money from credit
-        CURLOPT_URL => $config['service'] . "nzh/biz/issueInvoice?bizId={$bizId}&userId={$userId}&description=محصول&pay=true&postalCode=000000000&phoneNumber={$user->cellphoneNumber}&city=Tehrab&redirectUrl={$config['home']}&productId[]=0&price[]=5000&quantity[]=1&productDescription[]=services&state=test&address=test&deadline=1397/05/12&guildCode=INFORMATION_TECHNOLOGY_GUILD",
+        CURLOPT_URL => $config['service'] . "nzh/biz/issueInvoice?bizId={$bizId}&userId={$userId}&description=محصول&pay=true&postalCode=000000000&phoneNumber={$user->cellphoneNumber}&city=Tehran&redirectUrl={$config['home']}&productId[]=0&price[]=5000&quantity[]=1&productDescription[]=services&state=test&address=test&deadline=1397/05/12&guildCode=INFORMATION_TECHNOLOGY_GUILD&verificationNeeded=true",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
